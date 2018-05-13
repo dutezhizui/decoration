@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.darkcom.decoration.mapper.BuildingMaterialsMapper">
+  <resultMap id="BaseResultMap" type="com.darkcom.decoration.model.BuildingMaterials">
+    <id column="MATERIALS_ID" jdbcType="BIGINT" property="materialsId" />
+    <result column="MATERIALS_NAME" jdbcType="VARCHAR" property="materialsName" />
+    <result column="MATERIALS_IMAGE" jdbcType="VARCHAR" property="materialsImage" />
+    <result column="BRAND" jdbcType="VARCHAR" property="brand" />
+    <result column="PRICE" jdbcType="BIGINT" property="price" />
+    <result column="AREA" jdbcType="VARCHAR" property="area" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+    <result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+    <result column="CREATOR" jdbcType="BIGINT" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATOR" jdbcType="BIGINT" property="updator" />
+    <result column="IS_DEL" jdbcType="TINYINT" property="isDel" />
+    <result column="MATERIALS_TYPE" jdbcType="INTEGER" property="materialsType" />
+    <result column="SHOP_ID" jdbcType="BIGINT" property="shopId" />
+    <result column="SHOP_NAME" jdbcType="VARCHAR" property="shopName" />
+    <result column="IS_RECOMMEND" jdbcType="INTEGER" property="isRecommend" />
+    <result column="IMAGE" jdbcType="VARCHAR" property="image" />
+    <result column="COMMNET" jdbcType="VARCHAR" property="comment" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    MATERIALS_ID, MATERIALS_NAME, MATERIALS_IMAGE, BRAND, PRICE, AREA, CITY, PROVINCE, 
+    CREATOR, CREATE_TIME, UPDATE_TIME, UPDATOR, IS_DEL, MATERIALS_TYPE, SHOP_ID, SHOP_NAME, 
+    IS_RECOMMEND, IMAGE, COMMENT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TBL_BUILDING_MATERIALS
+    where MATERIALS_ID = #{materialsId,jdbcType=BIGINT}
+  </select>
+  <select id="getMaterials" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from TBL_BUILDING_MATERIALS
+    where MATERIALS_TYPE = #{materialsType,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from TBL_BUILDING_MATERIALS
+    where MATERIALS_ID = #{materialsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.darkcom.decoration.model.BuildingMaterials">
+    <selectKey keyProperty="materialsId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into TBL_BUILDING_MATERIALS (MATERIALS_NAME, MATERIALS_IMAGE, BRAND, 
+      PRICE, AREA, CITY, PROVINCE, 
+      CREATOR, CREATE_TIME, UPDATE_TIME, 
+      UPDATOR, IS_DEL, MATERIALS_TYPE, 
+      SHOP_ID, SHOP_NAME, IS_RECOMMEND, 
+      IMAGE,COMMENT)
+    values (#{materialsName,jdbcType=VARCHAR}, #{materialsImage,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, 
+      #{price,jdbcType=BIGINT}, #{area,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updator,jdbcType=BIGINT}, #{isDel,jdbcType=TINYINT}, #{materialsType,jdbcType=INTEGER}, 
+      #{shopId,jdbcType=BIGINT}, #{shopName,jdbcType=VARCHAR}, #{isRecommend,jdbcType=INTEGER}, 
+      #{image,jdbcType=VARCHAR},#{commnet,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.darkcom.decoration.model.BuildingMaterials">
+    <selectKey keyProperty="materialsId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into TBL_BUILDING_MATERIALS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="materialsName != null">
+        MATERIALS_NAME,
+      </if>
+      <if test="materialsImage != null">
+        MATERIALS_IMAGE,
+      </if>
+      <if test="brand != null">
+        BRAND,
+      </if>
+      <if test="price != null">
+        PRICE,
+      </if>
+      <if test="area != null">
+        AREA,
+      </if>
+      <if test="city != null">
+        CITY,
+      </if>
+      <if test="province != null">
+        PROVINCE,
+      </if>
+      <if test="creator != null">
+        CREATOR,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="updator != null">
+        UPDATOR,
+      </if>
+      <if test="isDel != null">
+        IS_DEL,
+      </if>
+      <if test="materialsType != null">
+        MATERIALS_TYPE,
+      </if>
+      <if test="shopId != null">
+        SHOP_ID,
+      </if>
+      <if test="shopName != null">
+        SHOP_NAME,
+      </if>
+      <if test="isRecommend != null">
+        IS_RECOMMEND,
+      </if>
+      <if test="image != null">
+        IMAGE,
+      </if>
+      <if test="comment != null">
+        COMMNET,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="materialsName != null">
+        #{materialsName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsImage != null">
+        #{materialsImage,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=BIGINT},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        #{updator,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="materialsType != null">
+        #{materialsType,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="shopName != null">
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="isRecommend != null">
+        #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="commnet != null">
+        #{commnet,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.darkcom.decoration.model.BuildingMaterials">
+    update TBL_BUILDING_MATERIALS
+    <set>
+      <if test="materialsName != null">
+        MATERIALS_NAME = #{materialsName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsImage != null">
+        MATERIALS_IMAGE = #{materialsImage,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        BRAND = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        PRICE = #{price,jdbcType=BIGINT},
+      </if>
+      <if test="area != null">
+        AREA = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        CREATOR = #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null">
+        UPDATOR = #{updator,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null">
+        IS_DEL = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="materialsType != null">
+        MATERIALS_TYPE = #{materialsType,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null">
+        SHOP_ID = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="shopName != null">
+        SHOP_NAME = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="isRecommend != null">
+        IS_RECOMMEND = #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="image != null">
+        IMAGE = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null">
+        COMMENT = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where MATERIALS_ID = #{materialsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.darkcom.decoration.model.BuildingMaterials">
+    update TBL_BUILDING_MATERIALS
+    set MATERIALS_NAME = #{materialsName,jdbcType=VARCHAR},
+      MATERIALS_IMAGE = #{materialsImage,jdbcType=VARCHAR},
+      BRAND = #{brand,jdbcType=VARCHAR},
+      PRICE = #{price,jdbcType=BIGINT},
+      AREA = #{area,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      PROVINCE = #{province,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATOR = #{updator,jdbcType=BIGINT},
+      IS_DEL = #{isDel,jdbcType=TINYINT},
+      MATERIALS_TYPE = #{materialsType,jdbcType=INTEGER},
+      SHOP_ID = #{shopId,jdbcType=BIGINT},
+      SHOP_NAME = #{shopName,jdbcType=VARCHAR},
+      IS_RECOMMEND = #{isRecommend,jdbcType=INTEGER},
+      IMAGE = #{image,jdbcType=VARCHAR},
+      COMMENT = #{commnet,jdbcType=VARCHAR}
+    where MATERIALS_ID = #{materialsId,jdbcType=BIGINT}
+  </update>
+</mapper>

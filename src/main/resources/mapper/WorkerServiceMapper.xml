@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.darkcom.decoration.mapper.WorkerServiceMapper">
+  <resultMap id="BaseResultMap" type="com.darkcom.decoration.model.WorkerService">
+    <id column="SERVICE_ID" jdbcType="BIGINT" property="serviceId" />
+    <result column="SERVICE_NAME" jdbcType="VARCHAR" property="serviceName" />
+    <result column="SERVICE_DESC" jdbcType="VARCHAR" property="serviceDesc" />
+    <result column="SERVICE_TYPE" jdbcType="INTEGER" property="serviceType" />
+    <result column="PRICE" jdbcType="BIGINT" property="price" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATOR" jdbcType="BIGINT" property="creator" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="AREA" jdbcType="VARCHAR" property="area" />
+    <result column="CITY" jdbcType="VARCHAR" property="city" />
+    <result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+    <result column="UPDATOR" jdbcType="BIGINT" property="updator" />
+    <result column="IMAGE" jdbcType="VARCHAR" property="image" />
+    <result column="IS_RECOMMEND" jdbcType="INTEGER" property="isRecommend" />
+    <result column="IS_DEL" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    SERVICE_ID, SERVICE_NAME, SERVICE_DESC, SERVICE_TYPE, PRICE, ADDRESS, CREATE_TIME, 
+    CREATOR, UPDATE_TIME, AREA, CITY, PROVINCE, UPDATOR, IMAGE, IS_RECOMMEND, IS_DEL
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from TBL_WORKER_SERVICE
+    where SERVICE_ID = #{serviceId,jdbcType=BIGINT}
+  </select>
+  <select id="getServices" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from TBL_WORKER_SERVICE
+    where SERVICE_ID = #{serviceType,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from TBL_WORKER_SERVICE
+    where SERVICE_ID = #{serviceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.darkcom.decoration.model.WorkerService">
+    <selectKey keyProperty="serviceId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into TBL_WORKER_SERVICE (SERVICE_NAME, SERVICE_DESC, SERVICE_TYPE, 
+      PRICE, ADDRESS, CREATE_TIME, 
+      CREATOR, UPDATE_TIME, AREA, 
+      CITY, PROVINCE, UPDATOR, 
+      IMAGE, IS_RECOMMEND, IS_DEL
+      )
+    values (#{serviceName,jdbcType=VARCHAR}, #{serviceDesc,jdbcType=VARCHAR}, #{serviceType,jdbcType=INTEGER}, 
+      #{price,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{area,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{updator,jdbcType=BIGINT}, 
+      #{image,jdbcType=VARCHAR}, #{isRecommend,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.darkcom.decoration.model.WorkerService">
+    <selectKey keyProperty="serviceId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into TBL_WORKER_SERVICE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="serviceName != null">
+        SERVICE_NAME,
+      </if>
+      <if test="serviceDesc != null">
+        SERVICE_DESC,
+      </if>
+      <if test="serviceType != null">
+        SERVICE_TYPE,
+      </if>
+      <if test="price != null">
+        PRICE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="creator != null">
+        CREATOR,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="area != null">
+        AREA,
+      </if>
+      <if test="city != null">
+        CITY,
+      </if>
+      <if test="province != null">
+        PROVINCE,
+      </if>
+      <if test="updator != null">
+        UPDATOR,
+      </if>
+      <if test="image != null">
+        IMAGE,
+      </if>
+      <if test="isRecommend != null">
+        IS_RECOMMEND,
+      </if>
+      <if test="isDel != null">
+        IS_DEL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="serviceName != null">
+        #{serviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceDesc != null">
+        #{serviceDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType != null">
+        #{serviceType,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=BIGINT},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="updator != null">
+        #{updator,jdbcType=BIGINT},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="isRecommend != null">
+        #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.darkcom.decoration.model.WorkerService">
+    update TBL_WORKER_SERVICE
+    <set>
+      <if test="serviceName != null">
+        SERVICE_NAME = #{serviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceDesc != null">
+        SERVICE_DESC = #{serviceDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType != null">
+        SERVICE_TYPE = #{serviceType,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        PRICE = #{price,jdbcType=BIGINT},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        CREATOR = #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="area != null">
+        AREA = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="updator != null">
+        UPDATOR = #{updator,jdbcType=BIGINT},
+      </if>
+      <if test="image != null">
+        IMAGE = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="isRecommend != null">
+        IS_RECOMMEND = #{isRecommend,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null">
+        IS_DEL = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where SERVICE_ID = #{serviceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.darkcom.decoration.model.WorkerService">
+    update TBL_WORKER_SERVICE
+    set SERVICE_NAME = #{serviceName,jdbcType=VARCHAR},
+      SERVICE_DESC = #{serviceDesc,jdbcType=VARCHAR},
+      SERVICE_TYPE = #{serviceType,jdbcType=INTEGER},
+      PRICE = #{price,jdbcType=BIGINT},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      AREA = #{area,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      PROVINCE = #{province,jdbcType=VARCHAR},
+      UPDATOR = #{updator,jdbcType=BIGINT},
+      IMAGE = #{image,jdbcType=VARCHAR},
+      IS_RECOMMEND = #{isRecommend,jdbcType=INTEGER},
+      IS_DEL = #{isDel,jdbcType=INTEGER}
+    where SERVICE_ID = #{serviceId,jdbcType=BIGINT}
+  </update>
+</mapper>

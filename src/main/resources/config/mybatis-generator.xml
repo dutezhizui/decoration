@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <context id="MySQL" targetRuntime="MyBatis3" defaultModelType="flat">
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <!--数据库链接地址账号密码-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://47.88.175.141:3306/decoration"
+                        userId="root" password="123456">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--生成Model类存放位置-->
+        <javaModelGenerator targetPackage="com.darkcom.decoration.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!--生成映射文件存放位置-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!--生成Dao类存放位置-->
+        <!-- 客户端代码，生成易于使用的针对Model对象和XML配置文件 的代码
+                type="ANNOTATEDMAPPER",生成Java Model 和基于注解的Mapper对象
+                type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
+                type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
+        -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.darkcom.decoration.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <!--生成对应表及类名-->
+        <!--<table tableName="TBL_USER" domainObjectName="User" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="user_id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="TBL_BUILDING_MATERIALS" domainObjectName="BuildingMaterials" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="materials_id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="TBL_SMS_RECORD" domainObjectName="SmsRecord" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="TBL_ORDER" domainObjectName="Order" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="order_id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="TBL_COMMENT" domainObjectName="Comment" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="comment_id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="tbl_permission" domainObjectName="Permission" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="TBL_WORKER_SERVICE" domainObjectName="WorkerService" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="service_id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="tbl_role" domainObjectName="Role" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>-->
+        <!--<table tableName="tbl_role" domainObjectName="Role" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>-->
+        <table tableName="TBL_WORKER_SERVICE" domainObjectName="WorkerService" enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="service_id" sqlStatement="MySql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>
