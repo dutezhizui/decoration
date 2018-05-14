@@ -1,8 +1,9 @@
 package com.darkcom.decoration.controller;
 
-import com.darkcom.decoration.common.BusinessException;
 import com.darkcom.decoration.common.Result;
 import com.darkcom.decoration.common.ResultCode;
+import com.darkcom.decoration.dto.request.UserRegisterRequest;
+import com.darkcom.decoration.exception.BusinessException;
 import com.darkcom.decoration.model.SmsRecord;
 import com.darkcom.decoration.model.User;
 import com.darkcom.decoration.service.ISmsSenderService;
@@ -38,27 +39,19 @@ public class UserController {
     /**
      * 登录
      *
-     * @param username
+     * @param account
      * @param password
      * @return
      */
     @PostMapping("login")
-    public Result login(@RequestParam("username") String username,
+    public Result login(@RequestParam("account") String account,
                         @RequestParam("password") String password) {
         DefaultHashService hashService = new DefaultHashService();
         HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(password).build();
         String encryptPassword = hashService.computeHash(hashRequest).toHex();
-        User user = userService.selectByPhoneAndPwd(username, encryptPassword);
+        User user = userService.selectByPhoneAndPwd(account, encryptPassword);
         if (!ObjectUtils.isEmpty(user)) {
-            Map returnMap = new HashMap(6);
-            returnMap.put("userName", user.getUserName());
-            returnMap.put("userId", user.getUserId());
-            returnMap.put("userType", user.getUserType());
-            returnMap.put("token", JWTUtil.sign(username, encryptPassword));
-            returnMap.put("phone", user.getPhone());
-            returnMap.put("email", user.getEmail());
-            returnMap.put("headUrl", user.getHeadUrl());
-            return new Result(200, "Login success", returnMap);
+            return new Result(200, "Login success", JWTUtil.sign(account,encryptPassword));
         } else {
             throw new BusinessException(ResultCode.LOGIN_FAIL.getCode(), ResultCode.LOGIN_FAIL.getMsg());
         }
@@ -67,35 +60,30 @@ public class UserController {
     /**
      * 用户注册
      *
-     * @param userName
-     * @param password
-     * @param confirmPassword
-     * @param phone
-     * @param userType
-     * @param verifyCode
      * @return
      */
     @PostMapping("register")
-    public Result register(@RequestParam("username") @NotNull String userName,
-                           @RequestParam("password") @NotNull String password,
-                           @RequestParam("confirmPassword") @NotNull String confirmPassword,
-                           @RequestParam("phone") @NotNull String phone,
-                           @RequestParam("userType") @NotNull String userType,
-                           @RequestParam("verifyCode") @NotNull String verifyCode) {
-        SmsRecord smsRecord = smsSenderService.checkVerifyCode(phone, verifyCode);
+    public Result register(@RequestBody UserRegisterRequest request) {
+        SmsRecord smsRecord = smsSenderService.checkVerifyCode(request.getPhone(), request.getVerifyCode());
         if (null == smsRecord) {
             throw new BusinessException(ResultCode.VERIFY_CODE_ERROR.getCode(), ResultCode.VERIFY_CODE_ERROR.getMsg());
         }
-        if (!password.trim().equals(confirmPassword)) {
+        if (!request.getPassword().trim().equals(request.getConfirmPassword())) {
             throw new BusinessException(ResultCode.TWICE_PASSWORD_NOT_SAME.getCode(), ResultCode.TWICE_PASSWORD_NOT_SAME.getMsg());
         }
         User user = new User();
-        user.setPassword(password);
-        user.setPhone(phone);
-        user.setUserType(userType);
-        user.setUserName(userName);
+        user.setAccount(request.getAccount());
+        user.setPhone(request.getPhone());
+        user.setUserType(request.getUserType());
+        user.setUserName(request.getUserName());
+        DefaultHashService hashService = new DefaultHashService();
+        HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(user.getPassword()).build();
+        String encryptPassword = hashService.computeHash(hashRequest).toHex();
+        user.setPassword(encryptPassword);
+        user.setCreateTime(new Date());
+        user.setStatus(Byte.valueOf("1"));
         userService.register(user);
-        return new Result(200, "Login success", JWTUtil.sign(phone, password));
+        return new Result(200, "Login success", JWTUtil.sign(request.getAccount(), encryptPassword));
     }
 
     @PostMapping("forgetPassword")

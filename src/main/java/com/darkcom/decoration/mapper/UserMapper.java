@@ -60,9 +60,9 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     /**
-     * 根据手机号和密码查询用户，用于登录用户校验
+     * 根据账号和密码查询用户，用于登录用户校验
      */
-    User selectByPhoneAndPwd(@Param("phone") String phone, @Param("password") String password);
+    User selectByPhoneAndPwd(@Param("account") String account, @Param("password") String password);
 
     /**
      * 更新用户最后登录时间

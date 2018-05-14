@@ -39,8 +39,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional(timeout = 3000)
-    public User selectByPhoneAndPwd(String phone, String password) {
-        return userMapper.selectByPhoneAndPwd(phone, password);
+    public User selectByPhoneAndPwd(String account, String password) {
+        return userMapper.selectByPhoneAndPwd(account, password);
     }
 
     @Override
@@ -55,17 +55,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void register(User user) {
-        DefaultHashService hashService = new DefaultHashService();
-        HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(user.getPassword()).build();
-        String encryptPassword = hashService.computeHash(hashRequest).toHex();
-        user.setPassword(encryptPassword);
-        user.setCreateTime(new Date());
-        user.setStatus(Byte.valueOf("1"));
         userMapper.insert(user);
-        UserRole userRole = new UserRole();
-        userRole.setUid(user.getUserId());
-        userRole.setRid(Long.parseLong(user.getUserType()));
-        userRoleMapper.insert(userRole);
+
     }
 
     @Override
