@@ -2,6 +2,8 @@ package com.darkcom.decoration.controller;
 
 import com.darkcom.decoration.common.Result;
 import com.darkcom.decoration.common.ResultCode;
+import com.darkcom.decoration.dto.request.ForgetPasswordRequest;
+import com.darkcom.decoration.dto.request.UpdateUserRequest;
 import com.darkcom.decoration.dto.request.UserRegisterRequest;
 import com.darkcom.decoration.exception.BusinessException;
 import com.darkcom.decoration.model.SmsRecord;
@@ -106,53 +108,46 @@ public class UserController {
         return new Result(200, "Login success", JWTUtil.sign(request.getAccount(), encryptPassword));
     }
 
+    /**
+     * 忘记密码
+     * @param request
+     * @return
+     */
     @PostMapping("forgetPassword")
-    public Result forgetPassword(
-            @RequestParam("password") @NotNull String password,
-            @RequestParam("confirmPassword") @NotNull String confirmPassword,
-            @RequestParam("phone") @NotNull String phone,
-            @RequestParam("verifyCode") @NotNull String verifyCode) {
-        SmsRecord smsRecord = smsSenderService.checkVerifyCode(phone, verifyCode, 2);
+    public Result forgetPassword(@RequestBody ForgetPasswordRequest request) {
+        SmsRecord smsRecord = smsSenderService.checkVerifyCode(request.getPhone(), request.getVerifyCode(), 2);
         if (null == smsRecord) {
             throw new BusinessException(ResultCode.VERIFY_CODE_ERROR.getCode(), ResultCode.VERIFY_CODE_ERROR.getMsg());
         }
-        if (!password.trim().equals(confirmPassword)) {
+        if (!request.getPassword().trim().equals(request.getConfirmPassword())) {
             throw new BusinessException(ResultCode.TWICE_PASSWORD_NOT_SAME.getCode(), ResultCode.TWICE_PASSWORD_NOT_SAME.getMsg());
         }
+        DefaultHashService hashService = new DefaultHashService();
+        HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(request.getPassword()).build();
+        String encryptPassword = hashService.computeHash(hashRequest).toHex();
         User user = new User();
-        user.setPassword(password);
-        user.setPhone(phone);
-        userService.register(user);
-        return new Result(200, "Login success", JWTUtil.sign(phone, password));
+        user.setPassword(encryptPassword);
+        user.setPhone(request.getPhone());
+        userService.updateUserInfo(user);
+        return new Result(200, "Login success", JWTUtil.sign(request.getPassword(), encryptPassword));
     }
 
     /**
      * 更新用户资料
      *
-     * @param email
-     * @param sex
-     * @param userId
-     * @param headUrl
-     * @param userName
+     * @param request
      * @return
      */
     @RequestMapping(value = "updateUserInfo", method = RequestMethod.POST)
-    public Result updateUser(@RequestParam("email") String email,
-                             @RequestParam("sex") String sex,
-                             @RequestParam("userId") Long userId,
-                             @RequestParam("headUrl") String headUrl,
-                             @RequestParam("userName") String userName) {
+    public Result updateUser(@RequestBody UpdateUserRequest request) {
         User user = new User();
-        user.setEmail(email);
-        user.setUserName(userName);
-        user.setSex(sex);
-        user.setUserId(userId);
-        user.setHeadUrl(headUrl);
+        user.setEmail(request.getEmail());
+        user.setUserName(request.getUserName());
+        user.setSex(request.getSex());
+        user.setUserId(user.getUserId());
+        user.setHeadUrl(user.getHeadUrl());
         userService.updateUserInfo(user);
-        Map returnMap = new HashMap(6);
-        returnMap.put("userName", user.getUserName());
-        returnMap.put("header_url", user.getHeadUrl());
-        return new Result(200, "修改密码成功", returnMap);
+        return Result.succeed();
     }
 
     /**
