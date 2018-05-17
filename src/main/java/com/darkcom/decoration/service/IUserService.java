@@ -54,4 +54,11 @@ public interface IUserService {
      * @param user
      */
     void updateUserInfo(User user);
+
+    /**
+     * 根据账号查询用户信息
+     * @param account
+     * @return
+     */
+    User selectUserByAccount(String account);
 }

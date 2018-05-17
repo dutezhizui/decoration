@@ -74,8 +74,17 @@ public interface UserMapper {
 
     /**
      * 根据用户名查询用户信息
+     *
      * @param username
      * @return
      */
     User getUserInfoByUserName(@Param("userName") String username);
+
+    /**
+     * 根据账号查找用户
+     *
+     * @param account
+     * @return
+     */
+    User selectUserByAccount(@Param("account") String account);
 }

@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Api("userController相关API")
 @RestController
-@RequestMapping(value = "/user/")
+@RequestMapping(value = "/user/v1/")
 public class UserController {
     public static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
@@ -37,13 +37,13 @@ public class UserController {
     private ISmsSenderService smsSenderService;
 
     /**
-     * 登录
+     * 账号登录
      *
      * @param account
      * @param password
      * @return
      */
-    @PostMapping("login")
+    @PostMapping("commonLogin")
     public Result login(@RequestParam("account") String account,
                         @RequestParam("password") String password) {
         DefaultHashService hashService = new DefaultHashService();
@@ -51,10 +51,30 @@ public class UserController {
         String encryptPassword = hashService.computeHash(hashRequest).toHex();
         User user = userService.selectByPhoneAndPwd(account, encryptPassword);
         if (!ObjectUtils.isEmpty(user)) {
-            return new Result(200, "Login success", JWTUtil.sign(account,encryptPassword));
+            return new Result(200, "Login success", JWTUtil.sign(account, encryptPassword));
         } else {
             throw new BusinessException(ResultCode.LOGIN_FAIL.getCode(), ResultCode.LOGIN_FAIL.getMsg());
         }
+    }
+
+    /**
+     * 快速登录，手机号验证码登录
+     *
+     * @param phone
+     * @param verifyCode
+     * @return
+     */
+    @PostMapping("fastLogin")
+    public Result fastLogin(@RequestParam("phone") @NotNull String phone, @RequestParam("verifyCode") @NotNull(message = "请输入验证码") String verifyCode) {
+        User user = userService.selectUserByAccount(phone);
+        if (ObjectUtils.isEmpty(user)) {
+            throw new BusinessException(ResultCode.USER_NOT_EXIST.getCode(), ResultCode.USER_NOT_EXIST.getMsg());
+        }
+        SmsRecord smsRecord = smsSenderService.checkVerifyCode(phone, verifyCode, 1);
+        if (ObjectUtils.isEmpty(smsRecord)) {
+            throw new BusinessException(ResultCode.VERIFY_CODE_VALIDATE.getCode(), ResultCode.VERIFY_CODE_VALIDATE.getMsg());
+        }
+        return Result.succeed(JWTUtil.sign(user.getAccount(), user.getPassword()));
     }
 
     /**
@@ -64,21 +84,21 @@ public class UserController {
      */
     @PostMapping("register")
     public Result register(@RequestBody UserRegisterRequest request) {
-        SmsRecord smsRecord = smsSenderService.checkVerifyCode(request.getPhone(), request.getVerifyCode());
-        if (null == smsRecord) {
-            throw new BusinessException(ResultCode.VERIFY_CODE_ERROR.getCode(), ResultCode.VERIFY_CODE_ERROR.getMsg());
-        }
         if (!request.getPassword().trim().equals(request.getConfirmPassword())) {
             throw new BusinessException(ResultCode.TWICE_PASSWORD_NOT_SAME.getCode(), ResultCode.TWICE_PASSWORD_NOT_SAME.getMsg());
         }
+        SmsRecord smsRecord = smsSenderService.checkVerifyCode(request.getPhone(), request.getVerifyCode(), 1);
+        if (null == smsRecord) {
+            throw new BusinessException(ResultCode.VERIFY_CODE_ERROR.getCode(), ResultCode.VERIFY_CODE_ERROR.getMsg());
+        }
+        DefaultHashService hashService = new DefaultHashService();
+        HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(request.getPassword()).build();
+        String encryptPassword = hashService.computeHash(hashRequest).toHex();
         User user = new User();
         user.setAccount(request.getAccount());
         user.setPhone(request.getPhone());
         user.setUserType(request.getUserType());
         user.setUserName(request.getUserName());
-        DefaultHashService hashService = new DefaultHashService();
-        HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(user.getPassword()).build();
-        String encryptPassword = hashService.computeHash(hashRequest).toHex();
         user.setPassword(encryptPassword);
         user.setCreateTime(new Date());
         user.setStatus(Byte.valueOf("1"));
@@ -92,7 +112,7 @@ public class UserController {
             @RequestParam("confirmPassword") @NotNull String confirmPassword,
             @RequestParam("phone") @NotNull String phone,
             @RequestParam("verifyCode") @NotNull String verifyCode) {
-        SmsRecord smsRecord = smsSenderService.checkVerifyCode(phone, verifyCode);
+        SmsRecord smsRecord = smsSenderService.checkVerifyCode(phone, verifyCode, 2);
         if (null == smsRecord) {
             throw new BusinessException(ResultCode.VERIFY_CODE_ERROR.getCode(), ResultCode.VERIFY_CODE_ERROR.getMsg());
         }

@@ -275,4 +275,14 @@
         from TBL_USER
         where phone = #{userName,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectUserByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <!--根据账号查询用户信息，
+        -->
+        SELECT
+        <include refid="Base_Column_List"/>
+        from TBL_USER
+        where ACCOUNT = #{account,jdbcType=VARCHAR}
+        limit 1
+    </select>
 </mapper>

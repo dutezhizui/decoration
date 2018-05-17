@@ -62,7 +62,8 @@ public interface SmsRecordMapper {
      *
      * @param phone
      * @param verifyCode
+     * @param codeType
      * @return
      */
-    SmsRecord checkVerifyCode(@Param("phone") String phone, @Param("verifyCode") String verifyCode);
+    SmsRecord checkVerifyCode(@Param("phone") String phone, @Param("verifyCode") String verifyCode, @Param("codeType") Integer codeType);
 }

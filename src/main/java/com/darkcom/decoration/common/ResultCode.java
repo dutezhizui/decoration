@@ -35,6 +35,7 @@ public class ResultCode {
     public static final ResultCode TWICE_PASSWORD_NOT_SAME = new ResultCode(600004, "两次输入的密码不一致");
     public static final ResultCode VERIFY_CODE_ERROR = new ResultCode(600005, "验证码错误");
     public static final ResultCode PASSWORD_ERROR = new ResultCode(600006, "密码错误");
+    public static final ResultCode VERIFY_CODE_VALIDATE = new ResultCode(600007, "验证码无效");
     public static final ResultCode DATA_NOT_FOUND = new ResultCode(404, "未查询到数据");
 
 }

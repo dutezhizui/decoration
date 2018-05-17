@@ -1,7 +1,6 @@
 package com.darkcom.decoration.config;
 
 import com.darkcom.decoration.shiro.JWTFilter;
-import com.darkcom.decoration.shiro.MyAccessFilter;
 import com.darkcom.decoration.shiro.MyShiroRealm;
 import com.darkcom.decoration.shiro.UrlPermissionResovler;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
@@ -64,7 +63,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         // 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
-        filterChainDefinitionMap.put("/user/login", "anon");
+        filterChainDefinitionMap.put("/user/v1/commonLogin", "anon");
+        filterChainDefinitionMap.put("/user/v1/fastLogin", "anon");
         filterChainDefinitionMap.put("/user/**", "jwt");
         filterChainDefinitionMap.put("/order/**", "jwt");
         filterChainDefinitionMap.put("/materials/**", "anon");

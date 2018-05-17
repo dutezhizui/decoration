@@ -11,9 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api("userController相关API")
+/**
+ * 短信验证码
+ *
+ * @author yjy
+ */
+@Api("SmsController相关API")
 @RestController
-@RequestMapping(value = "/sms/")
+@RequestMapping(value = "/sms/v1/")
 public class SmsController {
     private static final Logger logger = LoggerFactory.getLogger(SmsController.class);
     @Autowired
@@ -23,26 +28,13 @@ public class SmsController {
      * 发送验证码
      *
      * @param phone
+     * @param codeType
      * @return
      */
     @RequestMapping(value = "send", method = RequestMethod.POST)
-    public Result sendSms(@RequestParam("phone") String phone) {
-        Result result = new Result(200);
-        smsSenderService.sendSms(phone);
-        return result;
-    }
-
-    /**
-     * 校验验证码
-     *
-     * @param phone
-     * @param VerifyCode
-     * @return
-     */
-    @RequestMapping(value = "checkVerifyCode", method = RequestMethod.POST)
-    public Result checkVerifyCode(@RequestParam("phone") String phone, @RequestParam("verifyCode") String VerifyCode) {
-        Result result = new Result(200);
-        smsSenderService.sendSms(phone);
-        return result;
+    public Result sendSms(@RequestParam("phone") String phone, @RequestParam("codeType") Integer codeType) {
+        logger.debug("【发送验证码】，phone={},codeType={}", phone, codeType);
+        smsSenderService.sendSms(phone, codeType);
+        return Result.succeed();
     }
 }
