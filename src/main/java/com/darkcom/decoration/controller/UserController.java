@@ -3,6 +3,7 @@ package com.darkcom.decoration.controller;
 import com.darkcom.decoration.common.Result;
 import com.darkcom.decoration.common.ResultCode;
 import com.darkcom.decoration.dto.request.ForgetPasswordRequest;
+import com.darkcom.decoration.dto.request.ModifyPasswordRequest;
 import com.darkcom.decoration.dto.request.UpdateUserRequest;
 import com.darkcom.decoration.dto.request.UserRegisterRequest;
 import com.darkcom.decoration.exception.BusinessException;
@@ -22,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author yaojy
@@ -110,6 +109,7 @@ public class UserController {
 
     /**
      * 忘记密码
+     *
      * @param request
      * @return
      */
@@ -153,40 +153,26 @@ public class UserController {
     /**
      * 登录后修改密码
      *
-     * @param phone
-     * @param oldPassword
-     * @param newPassword
-     * @param confirmPwd
+     * @param request
      * @return
      */
     @PostMapping("modifyPassword")
-    public Result modifyPassword(
-            @RequestParam("phone") @NotNull String phone,
-            @RequestParam("oldPassword") @NotNull String oldPassword,
-            @RequestParam("newPassword") @NotNull String newPassword,
-            @RequestParam("confirmPwd") @NotNull String confirmPwd) {
-        if (!newPassword.equals(confirmPwd)) {
+    public Result modifyPassword(@RequestBody ModifyPasswordRequest request) {
+        if (!request.getConfirmPassword().equals(request.getNewPassword())) {
             throw new BusinessException(ResultCode.TWICE_PASSWORD_NOT_SAME.getCode(), ResultCode.TWICE_PASSWORD_NOT_SAME.getMsg());
         }
         DefaultHashService hashService = new DefaultHashService();
-        HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(oldPassword).build();
+        HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(request.getOldPassword()).build();
         String encryptPassword = hashService.computeHash(hashRequest).toHex();
-        User user = userService.selectByPhoneAndPwd(phone, encryptPassword);
+        User user = userService.selectByPhoneAndPwd(request.getPhone(), encryptPassword);
         if (user == null) {
             throw new BusinessException(ResultCode.PASSWORD_ERROR.getCode(), ResultCode.PASSWORD_ERROR.getMsg());
         }
-        HashRequest hashRequest_new = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(confirmPwd).build();
+        HashRequest hashRequest_new = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(request.getConfirmPassword()).build();
         String encryptPassword_new = hashService.computeHash(hashRequest_new).toHex();
         user.setPassword(encryptPassword_new);
         user.setUpdateTime(new Date());
         userService.updateUserInfo(user);
-        Map returnMap = new HashMap(6);
-        returnMap.put("userName", user.getUserName());
-        returnMap.put("userId", user.getUserId());
-        returnMap.put("userType", user.getUserType());
-        returnMap.put("token", JWTUtil.sign(phone, encryptPassword_new));
-        returnMap.put("phone", user.getPhone());
-        returnMap.put("header_url", user.getHeadUrl());
-        return new Result(200, "修改密码成功", returnMap);
+        return new Result(200, "修改密码成功", JWTUtil.sign(request.getPhone(), encryptPassword_new));
     }
 }

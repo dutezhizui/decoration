@@ -38,7 +38,7 @@ public class SmsSenderServiceImpl implements ISmsSenderService {
 
 
     @Override
-    public void sendSms(String phone) {
+    public void sendSms(String phone,Integer codeType) {
         //创建全局参数
         GlobalParams globalParams = new GlobalParams();
         // 设置请求路径
@@ -61,6 +61,7 @@ public class SmsSenderServiceImpl implements ISmsSenderService {
         smsRecord.setPhone(phone);
         smsRecord.setVerifycode(verifyCode);
         smsRecord.setCreateTime(new Date());
+        smsRecord.setCodeType(codeType);
         smsRecordMapper.insert(smsRecord);
     }
 
@@ -100,7 +101,7 @@ public class SmsSenderServiceImpl implements ISmsSenderService {
     }
 
     @Override
-    public SmsRecord checkVerifyCode(String phone, String verifyCode) {
-        return smsRecordMapper.checkVerifyCode(phone,verifyCode);
+    public SmsRecord checkVerifyCode(String phone, String verifyCode,Integer codeType) {
+        return smsRecordMapper.checkVerifyCode(phone,verifyCode,codeType);
     }
 }

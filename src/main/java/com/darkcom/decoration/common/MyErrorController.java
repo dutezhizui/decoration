@@ -51,7 +51,7 @@ public class MyErrorController extends BasicErrorController {
         }
         map.put("code", status);
         map.put("message", body.get("message"));
-        return new ResponseEntity<Map<String, Object>>(map, status);
+        return new ResponseEntity<>(map, status);
     }
 
     /**

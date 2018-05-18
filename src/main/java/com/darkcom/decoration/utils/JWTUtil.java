@@ -5,6 +5,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.darkcom.decoration.common.ResultCode;
+import com.darkcom.decoration.exception.AuthorizationException;
+import com.darkcom.decoration.exception.BusinessException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -30,7 +33,7 @@ public class JWTUtil {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("username", username)
+                    .withClaim("account", username)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
@@ -47,9 +50,9 @@ public class JWTUtil {
     public static String getUsername(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("username").asString();
+            return jwt.getClaim("account").asString();
         } catch (JWTDecodeException e) {
-            return null;
+            throw new AuthorizationException(ResultCode.UNAUTHORIZED.getCode(),ResultCode.UNAUTHORIZED.getMsg());
         }
     }
 
@@ -66,7 +69,7 @@ public class JWTUtil {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
             return JWT.create()
-                    .withClaim("username", username)
+                    .withClaim("account", username)
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {

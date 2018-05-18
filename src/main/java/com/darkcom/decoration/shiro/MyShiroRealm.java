@@ -116,17 +116,17 @@ public class MyShiroRealm extends AuthorizingRealm {
 
         String token = (String) authcToken.getCredentials();
         // 解密获得username，用于和数据库进行对比
-        String username = JWTUtil.getUsername(token);
-        if (username == null) {
+        String account = JWTUtil.getUsername(token);
+        if (account == null) {
             throw new AuthenticationException("token invalid");
         }
 
-        User user = userService.getUserInfoByUserName(username);
+        User user = userService.selectUserByAccount(account);
         if (user == null) {
             throw new AuthenticationException("User didn't existed!");
         }
 
-        if (!JWTUtil.verify(token, username, user.getPassword())) {
+        if (!JWTUtil.verify(token, account, user.getPassword())) {
             throw new AuthenticationException("Username or password error");
         }
 

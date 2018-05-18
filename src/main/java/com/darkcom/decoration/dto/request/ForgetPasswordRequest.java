@@ -1,13 +1,19 @@
 package com.darkcom.decoration.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 忘记密码
  * @author yjy
  */
 public class ForgetPasswordRequest {
+    @NotNull
     private String password;
+    @NotNull
     private String confirmPassword;
+    @NotNull
     private String verifyCode;
+    @NotNull
     private String phone;
 
     public String getPassword() {

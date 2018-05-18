@@ -1,13 +1,8 @@
 package com.darkcom.decoration.service.impl;
 
 import com.darkcom.decoration.mapper.UserMapper;
-import com.darkcom.decoration.mapper.UserRoleMapper;
 import com.darkcom.decoration.model.User;
-import com.darkcom.decoration.model.UserRole;
-import com.darkcom.decoration.service.ISmsSenderService;
 import com.darkcom.decoration.service.IUserService;
-import org.apache.shiro.crypto.hash.DefaultHashService;
-import org.apache.shiro.crypto.hash.HashRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +17,9 @@ import java.util.Date;
 @Service
 public class UserServiceImpl implements IUserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    private final UserMapper userMapper;
-    private final UserRoleMapper userRoleMapper;
     @Autowired
-    private ISmsSenderService smsSenderService;
-    @Autowired
-    public UserServiceImpl(UserMapper userMapper, UserRoleMapper userRoleMapper) {
-        this.userMapper = userMapper;
-        this.userRoleMapper = userRoleMapper;
-    }
+    private UserMapper userMapper;
+
 
     @Override
     public User getUserInfo(Long userId) {
@@ -62,5 +51,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void updateUserInfo(User user) {
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public User selectUserByAccount(String account) {
+        return userMapper.selectUserByAccount(account);
     }
 }

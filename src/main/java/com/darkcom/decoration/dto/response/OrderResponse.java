@@ -1,13 +1,13 @@
-package com.darkcom.decoration.model;
+package com.darkcom.decoration.dto.response;
 
 import java.util.Date;
 
 /**
- * 订单
+ * 订单详情
  *
  * @author yjy
  */
-public class Order {
+public class OrderResponse {
     private Long orderId;
 
     private String orderNo;

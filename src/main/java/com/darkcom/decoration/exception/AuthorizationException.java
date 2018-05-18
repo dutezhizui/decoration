@@ -5,5 +5,12 @@ package com.darkcom.decoration.exception;
  *
  * @author yjy
  */
-public class AuthorizationException extends RuntimeException {
+public class AuthorizationException extends BusinessException {
+    public AuthorizationException() {
+
+    }
+
+    public AuthorizationException(Integer code, String message) {
+        super(code, message);
+    }
 }

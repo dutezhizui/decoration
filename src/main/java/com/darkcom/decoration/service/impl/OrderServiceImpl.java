@@ -18,18 +18,24 @@ public class OrderServiceImpl implements IOrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
     @Autowired
     private OrderMapper orderMapper;
+
     @Override
-    public List getOrderList(Long userId, Integer status) {
-        return orderMapper.getOrderList(userId,status);
+    public List getOrderList(String account, Integer status) {
+        return orderMapper.getOrderList(account, status);
     }
 
     @Override
-    public void insertOrder(Order order) {
-        orderMapper.insert(order);
+    public void createOrder(Order order) {
+        orderMapper.insertSelective(order);
     }
 
     @Override
     public void updateOrderStatus(Long orderId, Integer status) {
 
+    }
+
+    @Override
+    public Order getOrderById(String orderNo) {
+        return orderMapper.selectByOrderNo(orderNo);
     }
 }

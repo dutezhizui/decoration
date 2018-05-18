@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Api("IndexController")
 @RestController
-@RequestMapping(value = "/index/")
+@RequestMapping(value = "/index/v1/")
 public class IndexController {
     public static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 

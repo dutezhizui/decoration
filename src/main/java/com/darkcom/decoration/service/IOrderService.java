@@ -9,9 +9,11 @@ import java.util.List;
  */
 public interface IOrderService {
 
-    List getOrderList(Long userId, Integer status);
+    List getOrderList(String account, Integer status);
 
-    void insertOrder(Order order);
+    void createOrder(Order order);
 
-    void updateOrderStatus(Long orderId,Integer status);
+    void updateOrderStatus(Long orderId, Integer status);
+
+    Order getOrderById(String orderNo);
 }
