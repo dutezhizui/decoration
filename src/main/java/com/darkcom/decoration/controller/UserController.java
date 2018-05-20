@@ -75,7 +75,7 @@ public class UserController {
         if (ObjectUtils.isEmpty(smsRecord)) {
             throw new BusinessException(ResultCode.VERIFY_CODE_VALIDATE.getCode(), ResultCode.VERIFY_CODE_VALIDATE.getMsg());
         }
-        return Result.succeed(JWTUtil.sign(user.getAccount(), user.getPassword()));
+        return new Result(200, "Login success",JWTUtil.sign(user.getAccount(), user.getPassword()));
     }
 
     /**
