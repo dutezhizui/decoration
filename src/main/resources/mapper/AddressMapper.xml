@@ -3,6 +3,8 @@
 <mapper namespace="com.darkcom.decoration.mapper.AddressMapper">
   <resultMap id="BaseResultMap" type="com.darkcom.decoration.model.Address">
     <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="PROVINCE" jdbcType="VARCHAR" property="province" />
     <result column="CITY" jdbcType="VARCHAR" property="city" />
     <result column="AREA" jdbcType="VARCHAR" property="area" />
@@ -13,7 +15,7 @@
     <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, PROVINCE, CITY, AREA, DETAIL_ADDRESS, CREATE_TIME, UPDATE_TIME, IS_DEFAULT, ACCOUNT
+    ID, PHONE, NAME, PROVINCE, CITY, AREA, DETAIL_ADDRESS, CREATE_TIME, UPDATE_TIME, IS_DEFAULT, ACCOUNT
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -29,10 +31,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into TBL_ADDRESS (PROVINCE, CITY, AREA, 
+    insert into TBL_ADDRESS (NAME, PHONE, PROVINCE, CITY, AREA,
       DETAIL_ADDRESS, CREATE_TIME, UPDATE_TIME, 
       IS_DEFAULT, ACCOUNT)
-    values (#{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR},
       #{detailAddress,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{isDefault,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR})
   </insert>
@@ -42,6 +44,12 @@
     </selectKey>
     insert into TBL_ADDRESS
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
       <if test="province != null">
         PROVINCE,
       </if>
@@ -68,6 +76,12 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
       <if test="province != null">
         #{province,jdbcType=VARCHAR},
       </if>
@@ -97,6 +111,12 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.darkcom.decoration.model.Address">
     update TBL_ADDRESS
     <set>
+      <if test="phone != null">
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
       <if test="province != null">
         PROVINCE = #{province,jdbcType=VARCHAR},
       </if>
@@ -127,6 +147,8 @@
   <update id="updateByPrimaryKey" parameterType="com.darkcom.decoration.model.Address">
     update TBL_ADDRESS
     set PROVINCE = #{province,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
       CITY = #{city,jdbcType=VARCHAR},
       AREA = #{area,jdbcType=VARCHAR},
       DETAIL_ADDRESS = #{detailAddress,jdbcType=VARCHAR},

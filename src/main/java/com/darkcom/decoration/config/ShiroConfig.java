@@ -65,6 +65,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/logout", "logout");
         filterChainDefinitionMap.put("/user/v1/commonLogin", "anon");
         filterChainDefinitionMap.put("/user/v1/fastLogin", "anon");
+        filterChainDefinitionMap.put("/user/v1/register/**","anon");
         filterChainDefinitionMap.put("/user/**", "jwt");
         filterChainDefinitionMap.put("/order/**", "jwt");
         filterChainDefinitionMap.put("/materials/**", "anon");

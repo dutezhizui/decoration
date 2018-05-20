@@ -5,6 +5,8 @@ package com.darkcom.decoration.dto.request;
  * @author yjy
  */
 public class AddAddressRequest {
+    private String phone;
+    private String name;
     private String province;
 
     private String city;
@@ -14,6 +16,22 @@ public class AddAddressRequest {
     private String detailAddress;
 
     private Integer isDefault;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getProvince() {
         return province;

@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class Address {
     private Integer id;
-
+    private String phone;
+    private String name;
     private String province;
 
     private String city;
@@ -27,6 +28,22 @@ public class Address {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getProvince() {
