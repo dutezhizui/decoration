@@ -1,10 +1,13 @@
 package com.darkcom.decoration.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.darkcom.decoration.common.Result;
-import com.darkcom.decoration.utils.ZimgClient;
-import com.google.gson.Gson;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
+import java.util.UUID;
 
 /**
  * tupianshangchuan
@@ -31,62 +31,75 @@ import java.util.List;
 @RequestMapping("/upload/v1/")
 public class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
+    @Value("${zimgServer}")
+    private String zimServer;
 
-    @PostMapping("uploadHeadImage")
-    public Result uploadImage(MultipartFile multipartFile, HttpServletRequest request) {
-        String imgUrl = null;
-        // 上传到图片服务器
-        MultipartFile f = multipartFile;
-
-        String tmpFileName = ZimgClient.tmpPath + "/"
-                + f.getOriginalFilename();
-        // mkdir("./tmp")
-        File tmp = new File(ZimgClient.tmpPath);
-        tmp.mkdir();
-        tmp = new File(tmpFileName);
+    @PostMapping(value = "uploadHeadImage")
+    public Result uploadImage(@RequestParam("headerImage") String base64Data, HttpServletRequest request) throws Exception {
+        String imgurl = null;
         try {
-            // tmp.delete();
-            f.transferTo(tmp);
-        } catch (Exception e) {
-            e.printStackTrace();
+            String dataPrix = "";
+            String data = "";
+            if(base64Data == null || "".equals(base64Data)){
+                throw new Exception("上传失败，上传图片数据为空");
+            }else{
+                String [] d = base64Data.split("base64,");
+                if(d != null && d.length == 2){
+                    dataPrix = d[0];
+                    data = d[1];
+                }else{
+                    throw new Exception("上传失败，数据不合法");
+                }
+            }
+            String suffix = "";
+            if("data:image/jpeg;".equalsIgnoreCase(dataPrix)){//data:image/jpeg;base64,base64编码的jpeg图片数据
+                suffix = "jpg";
+            } else if("data:image/x-icon;".equalsIgnoreCase(dataPrix)){//data:image/x-icon;base64,base64编码的icon图片数据
+                suffix = "ico";
+            } else if("data:image/gif;".equalsIgnoreCase(dataPrix)){//data:image/gif;base64,base64编码的gif图片数据
+                suffix = "gif";
+            } else if("data:image/png;".equalsIgnoreCase(dataPrix)){//data:image/png;base64,base64编码的png图片数据
+                suffix = "png";
+            }else{
+                throw new Exception("上传图片格式不合法");
+            }
+            //因为BASE64Decoder的jar问题，此处使用spring框架提供的工具包
+            byte[] bs = Base64Utils.decodeFromString(data);
+
+            ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(bs);
+
+            String info = this.send(zimServer,byteArrayInputStream,suffix);
+            JSONObject jsonObject = JSON.parseObject(info);
+            imgurl = jsonObject.getJSONObject("info").getString("md5");
+            } catch (Exception e) {
+            LOGGER.error("图片文件上传失败,原因：" + e.getMessage());
         }
-
-        ZimgClient.ZimgResult ret = this.uploadImg(tmpFileName);
-        LOGGER.debug(new Gson().toJson(ret));
-        if (ret != null && ret.isRet())
-            imgUrl = ret.getImageUrl();
-
-
-        return Result.succeed();
+        return Result.succeed(zimServer + imgurl);
     }
 
-    /**
-     * 指定文件名，上传到zimg
-     *
-     * @param fileName
-     * @return
-     */
-    public ZimgClient.ZimgResult uploadImg(String fileName) {
-        String ext = "jpeg";
-        int inx = fileName.lastIndexOf(".");
-        if (inx > 0)
-            ext = fileName.substring(inx + 1);
-        String resp = this.Send(ZimgClient.zimgUrl + "upload", fileName, ext);
-        return new Gson().fromJson(resp, ZimgClient.ZimgResult.class);
+    @PostMapping("uploadMultiImage")
+    public Result uploadMultiImage(@RequestParam("fieldName") MultipartFile file[], HttpServletRequest request) {
+        String imgurl = null;
+        try {
+            //调取ZimgUploadUtil工具类来上传图片
+            MultipartFile multipartFile = ((MultipartHttpServletRequest) request).getFile("fieldName");
+            String info = this.send(zimServer, (FileInputStream) multipartFile.getInputStream(),"png");
+            JSONObject jsonObject = JSON.parseObject(info);
+            imgurl = jsonObject.getJSONObject("info").getString("md5");
+        } catch (Exception e) {
+            LOGGER.error("图片文件上传失败,原因：" + e.getMessage());
+        }
+        return Result.succeed(zimServer + imgurl);
     }
 
     /**
      * 将图片文件上传到zimg服务器
      *
      * @param url
-     * @param fileName
-     * @param ext
+     * @param inputStream
      * @return
      */
-    protected String Send(String url, String fileName, String ext) {
-
-        if (ext.toLowerCase().compareTo("jpg") == 0)
-            ext = "jpeg";
+    protected String send(String url, InputStream inputStream,String ext) {
         String respXML = "";
         try {
             // 获得connection对象
@@ -98,44 +111,42 @@ public class UploadController {
             HttpURLConnection uc = (HttpURLConnection) connection;
 
             // 设置HTTP协议的消息头
-            LOGGER.debug("zimg set header");
             uc.setRequestMethod("POST");
             uc.setRequestProperty("Connection", "Keep-Alive");
             uc.setRequestProperty("Cache-Control", "no-cache");
-            uc.setRequestProperty("Content-Type", ext.toLowerCase());// "jpeg");//
+            uc.setRequestProperty("Content-Type",ext);
             uc.setRequestProperty("COOKIE", "william");
             uc.setDoOutput(true);
             uc.setDoInput(true);
-
-            LOGGER.debug("zimg connect server.");
-            // 与建立服务器连接
             uc.connect();
-            // 设置传输模式为二进制
-            LOGGER.debug("zimg upload image in binary.");
             OutputStream om = uc.getOutputStream();
             // 循环读取图片，发送到zimg服务器
-            FileInputStream in = new FileInputStream(fileName);
+            InputStream in = inputStream;
             byte[] buf = new byte[8192];
             while (true) {
                 int len = in.read(buf);
-                if (len <= 0)
+                if (len <= 0) {
                     break;
+                }
                 om.write(buf, 0, len);
             }
 
             // 到开输入（返回信息）流
             InputStreamReader im = new InputStreamReader(uc.getInputStream(),
                     "UTF-8");
-            // 循环读取，知道结束，获取返回信息
-            LOGGER.debug("zimg get response text.");
+            // 循环读取，直到结束，获取返回信息
             char[] bb = new char[8192];
             while (true) {
                 int length = im.read(bb);
-                if (length == -1)
+                if (length == -1) {
                     break;
+                }
+
                 char[] bc = new char[length];
-                for (int i = 0; i < length; i++)
+                for (int i = 0; i < length; i++) {
                     bc[i] = bb[i];
+                }
+
                 respXML += new String(bc);
             }
             LOGGER.debug("zimg response:" + respXML);

@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
@@ -116,5 +118,11 @@ public class DruidConfig {
         }
         return datasource;
     }
-
+    @Bean
+    MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize("128KB");
+        factory.setMaxRequestSize("128KB");
+        return factory.createMultipartConfig();
+    }
 }
