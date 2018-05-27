@@ -16,7 +16,7 @@ public class UserRegisterRequest {
     private String userType;
     @NotNull
     private String verifyCode;
-
+    private String headUrl;
     public String getAccount() {
         return account;
     }
@@ -71,5 +71,13 @@ public class UserRegisterRequest {
 
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
     }
 }

@@ -88,7 +88,7 @@ public class UserController {
         if (!request.getPassword().trim().equals(request.getConfirmPassword())) {
             throw new BusinessException(ResultCode.TWICE_PASSWORD_NOT_SAME.getCode(), ResultCode.TWICE_PASSWORD_NOT_SAME.getMsg());
         }
-        SmsRecord smsRecord = smsSenderService.checkVerifyCode(request.getPhone(), request.getVerifyCode(), 1);
+        SmsRecord smsRecord = smsSenderService.checkVerifyCode(request.getPhone(), request.getVerifyCode(), 2);
         if (null == smsRecord) {
             throw new BusinessException(ResultCode.VERIFY_CODE_ERROR.getCode(), ResultCode.VERIFY_CODE_ERROR.getMsg());
         }
