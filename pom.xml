@@ -88,6 +88,8 @@
             <groupId>monyun-message</groupId>
             <artifactId>monyun-message-sdk</artifactId>
             <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/JavaSmsSdk.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->

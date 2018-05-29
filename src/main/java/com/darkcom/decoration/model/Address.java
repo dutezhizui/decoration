@@ -3,9 +3,12 @@ package com.darkcom.decoration.model;
 import java.util.Date;
 
 public class Address {
-    private Integer id;
+    private Long id;
+
     private String phone;
+
     private String name;
+
     private String province;
 
     private String city;
@@ -22,11 +25,11 @@ public class Address {
 
     private String account;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -35,7 +38,7 @@ public class Address {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phone = phone == null ? null : phone.trim();
     }
 
     public String getName() {
@@ -43,7 +46,7 @@ public class Address {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
     }
 
     public String getProvince() {
