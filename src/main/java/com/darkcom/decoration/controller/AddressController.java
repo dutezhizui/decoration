@@ -54,7 +54,6 @@ public class AddressController {
                                     @RequestParam("addressId") Integer addressId){
         Address address=new Address();
         address.setIsDefault(isDefault);
-        address.setId(addressId);
         addressService.updateAddressInfo(address);
         return Result.succeed();
     }
@@ -77,7 +76,6 @@ public class AddressController {
                                     @RequestParam("detailAddress") String detailAddress,
                                     @RequestParam("area") String area){
         Address address=new Address();
-        address.setId(addressId);
         address.setIsDefault(isDefault);
         address.setProvince(province);
         address.setCity(city);

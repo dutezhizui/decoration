@@ -5,7 +5,7 @@
     <logger name="org.springframework.web" level="debug"/>
     <logger name="com.darkcom" level="debug"/>
     <logger name="com.alibaba.druid" level="info"/>
-    <property name="log.path" value="D:/log/logback.log"/>
+    <property name="log.path" value="logback.log"/>
 
     <appender name="file"
               class="ch.qos.logback.core.rolling.RollingFileAppender">

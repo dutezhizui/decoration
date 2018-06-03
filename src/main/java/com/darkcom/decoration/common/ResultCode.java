@@ -36,6 +36,7 @@ public class ResultCode {
     public static final ResultCode VERIFY_CODE_ERROR = new ResultCode(600005, "验证码错误");
     public static final ResultCode PASSWORD_ERROR = new ResultCode(600006, "密码错误");
     public static final ResultCode VERIFY_CODE_VALIDATE = new ResultCode(600007, "验证码无效");
+    public static final ResultCode PARAMETER_ERROR = new ResultCode(600008, "参数错误");
     public static final ResultCode DATA_NOT_FOUND = new ResultCode(404, "未查询到数据");
 
 }

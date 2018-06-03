@@ -1,11 +1,14 @@
 package com.darkcom.decoration.controller;
 
 import com.darkcom.decoration.common.Result;
+import com.darkcom.decoration.common.ResultCode;
+import com.darkcom.decoration.exception.BusinessException;
 import com.darkcom.decoration.service.ISmsSenderService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +36,9 @@ public class SmsController {
      */
     @RequestMapping(value = "send", method = RequestMethod.POST)
     public Result sendSms(@RequestParam("phone") String phone, @RequestParam("codeType") Integer codeType) {
+        if (StringUtils.isEmpty(phone)||codeType==null){
+            throw new BusinessException(ResultCode.PARAMETER_ERROR.getCode(),ResultCode.PARAMETER_ERROR.getMsg());
+        }
         logger.debug("【发送验证码】，phone={},codeType={}", phone, codeType);
         smsSenderService.sendSms(phone, codeType);
         return Result.succeed();
