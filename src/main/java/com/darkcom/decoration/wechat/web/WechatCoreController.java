@@ -26,7 +26,7 @@ import java.util.Arrays;
 @RequestMapping(value = "/wechat/wechatCode")
 public class WechatCoreController {
 	
-	@Value("${wechat.token}")
+	@Value("${wechat.mp.token}")
 	private String token;
 	/**
 	 * 

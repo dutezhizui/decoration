@@ -85,11 +85,11 @@
             <version>${shiro.version}</version>
         </dependency>
         <dependency>
-            <groupId>monyun-message</groupId>
-            <artifactId>monyun-message-sdk</artifactId>
+            <groupId>com.monyun.smsSender</groupId>
+            <artifactId>monyun-smsSender</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/JavaSmsSdk.jar</systemPath>
+            <systemPath>${project.basedir}/lib/JavaSmsSdk.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
@@ -110,7 +110,22 @@
             <artifactId>java-jwt</artifactId>
             <version>3.3.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>3.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-http</artifactId>
+            <version>3.7.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -118,6 +133,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
             <!--自动生成mapper-->
             <plugin>
@@ -145,16 +163,16 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <!--允许移动生成的文件 -->
+                <!--<configuration>
+                    &lt;!&ndash;允许移动生成的文件 &ndash;&gt;
                     <verbose>true</verbose>
-                    <!-- 是否覆盖 -->
+                    &lt;!&ndash; 是否覆盖 &ndash;&gt;
                     <overwrite>true</overwrite>
-                    <!-- 自动生成的配置 -->
+                    &lt;!&ndash; 自动生成的配置 &ndash;&gt;
                     <configurationFile>
                         src/main/resources/config/mybatis-generator.xml
                     </configurationFile>
-                </configuration>
+                </configuration>-->
             </plugin>
         </plugins>
     </build>

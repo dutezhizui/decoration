@@ -1,4 +1,4 @@
-package com.darkcom.decoration.controller;
+package com.darkcom.decoration.wechat.web;
 
 import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.bean.menu.WxMenuButton;
