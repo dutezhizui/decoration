@@ -83,7 +83,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("orderList")
-    public Result login(@RequestParam("userId") Long userId,
+    public Result getOrderList(@RequestParam("userId") Long userId,
                         @RequestParam("status") Integer status, HttpServletRequest request) {
         Result result = new Result(200);
         String account = JWTUtil.getUsername(request.getHeader("authorization"));

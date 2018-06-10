@@ -2,6 +2,7 @@ package com.darkcom.decoration.controller;
 
 import com.darkcom.decoration.common.Result;
 import com.darkcom.decoration.common.ResultCode;
+import com.darkcom.decoration.constant.CommonConstants;
 import com.darkcom.decoration.dto.request.ForgetPasswordRequest;
 import com.darkcom.decoration.dto.request.ModifyPasswordRequest;
 import com.darkcom.decoration.dto.request.UpdateUserRequest;
@@ -21,8 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yaojy
@@ -30,6 +33,7 @@ import java.util.Date;
 @Api("userController相关API")
 @RestController
 @RequestMapping(value = "/user/v1/")
+@CrossOrigin
 public class UserController {
     public static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
@@ -96,13 +100,14 @@ public class UserController {
         HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(request.getPassword()).build();
         String encryptPassword = hashService.computeHash(hashRequest).toHex();
         User user = new User();
-        user.setAccount(request.getAccount());
+        user.setAccount(request.getPhone());
         user.setPhone(request.getPhone());
         user.setUserType(request.getUserType());
         user.setUserName(request.getUserName());
         user.setPassword(encryptPassword);
         user.setCreateTime(new Date());
-        user.setStatus(Byte.valueOf("1"));
+        user.setStatus(Byte.valueOf(request.getUserType()));
+        user.setHeadUrl(request.getHeadUrl());
         userService.register(user);
         return new Result(200, "Login success", JWTUtil.sign(request.getAccount(), encryptPassword));
     }
@@ -139,13 +144,14 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "updateUserInfo", method = RequestMethod.POST)
-    public Result updateUser(@RequestBody UpdateUserRequest request) {
+    public Result updateUser(@RequestBody UpdateUserRequest request,HttpServletRequest servletRequest) {
+        String account = JWTUtil.getUsername(servletRequest.getHeader(CommonConstants.AUTHORIZATION));
         User user = new User();
         user.setEmail(request.getEmail());
         user.setUserName(request.getUserName());
         user.setSex(request.getSex());
-        user.setUserId(user.getUserId());
-        user.setHeadUrl(user.getHeadUrl());
+        user.setHeadUrl(request.getHeadUrl());
+        user.setAccount(account);
         userService.updateUserInfo(user);
         return Result.succeed();
     }
@@ -157,14 +163,15 @@ public class UserController {
      * @return
      */
     @PostMapping("modifyPassword")
-    public Result modifyPassword(@RequestBody ModifyPasswordRequest request) {
+    public Result modifyPassword(@RequestBody ModifyPasswordRequest request,HttpServletRequest ServletRequest) {
         if (!request.getConfirmPassword().equals(request.getNewPassword())) {
             throw new BusinessException(ResultCode.TWICE_PASSWORD_NOT_SAME.getCode(), ResultCode.TWICE_PASSWORD_NOT_SAME.getMsg());
         }
+        String account = JWTUtil.getUsername(ServletRequest.getHeader(CommonConstants.AUTHORIZATION));
         DefaultHashService hashService = new DefaultHashService();
         HashRequest hashRequest = new HashRequest.Builder().setAlgorithmName("SHA-256").setSource(request.getOldPassword()).build();
         String encryptPassword = hashService.computeHash(hashRequest).toHex();
-        User user = userService.selectByPhoneAndPwd(request.getPhone(), encryptPassword);
+        User user = userService.selectByPhoneAndPwd(account, encryptPassword);
         if (user == null) {
             throw new BusinessException(ResultCode.PASSWORD_ERROR.getCode(), ResultCode.PASSWORD_ERROR.getMsg());
         }
@@ -173,6 +180,18 @@ public class UserController {
         user.setPassword(encryptPassword_new);
         user.setUpdateTime(new Date());
         userService.updateUserInfo(user);
-        return new Result(200, "修改密码成功", JWTUtil.sign(request.getPhone(), encryptPassword_new));
+        return new Result(200, "修改密码成功", JWTUtil.sign(account, encryptPassword_new));
+    }
+
+    /**
+     * 用户信息
+     *
+     * @return
+     */
+    @GetMapping("userInfo")
+    public Result getUserInfo(HttpServletRequest request) {
+        String account = JWTUtil.getUsername(request.getHeader(CommonConstants.AUTHORIZATION));
+        User user=userService.selectUserByAccount(account);
+        return Result.succeed(user);
     }
 }

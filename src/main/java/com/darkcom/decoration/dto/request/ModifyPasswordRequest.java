@@ -9,7 +9,6 @@ public class ModifyPasswordRequest {
     private String oldPassword;
     private String newPassword;
     private String confirmPassword;
-    private String phone;
 
     public String getOldPassword() {
         return oldPassword;
@@ -35,11 +34,4 @@ public class ModifyPasswordRequest {
         this.confirmPassword = confirmPassword;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }

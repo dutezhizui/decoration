@@ -8,14 +8,14 @@ public class AddAddressRequest {
     private String phone;
     private String name;
     private String province;
-
+    private String[] region;
     private String city;
 
     private String area;
 
     private String detailAddress;
 
-    private Integer isDefault;
+    private boolean isDefault;
 
     public String getPhone() {
         return phone;
@@ -65,11 +65,19 @@ public class AddAddressRequest {
         this.detailAddress = detailAddress;
     }
 
-    public Integer getIsDefault() {
+    public boolean getDefault() {
         return isDefault;
     }
 
-    public void setIsDefault(Integer isDefault) {
-        this.isDefault = isDefault;
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public String[] getRegion() {
+        return region;
+    }
+
+    public void setRegion(String[] region) {
+        this.region = region;
     }
 }

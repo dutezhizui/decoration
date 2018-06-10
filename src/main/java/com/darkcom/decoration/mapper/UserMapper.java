@@ -87,4 +87,10 @@ public interface UserMapper {
      * @return
      */
     User selectUserByAccount(@Param("account") String account);
+
+    /**
+     * 根据账号更新用户信息
+     * @param user
+     */
+    void updateUserByAccount(User user);
 }

@@ -21,7 +21,7 @@ public class Address {
 
     private Date updateTime;
 
-    private Integer isDefault;
+    private boolean isDefault;
 
     private String account;
 
@@ -97,11 +97,11 @@ public class Address {
         this.updateTime = updateTime;
     }
 
-    public Integer getIsDefault() {
+    public boolean getIsDefault() {
         return isDefault;
     }
 
-    public void setIsDefault(Integer isDefault) {
+    public void setIsDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
 
