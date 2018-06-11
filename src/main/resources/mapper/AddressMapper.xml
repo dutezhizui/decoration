@@ -24,6 +24,12 @@
     from TBL_ADDRESS
     where ID = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getAddressList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List"/>
+    FROM TBL_ADDRESS
+    WHERE ACCOUNT = #{account,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from TBL_ADDRESS
     where ID = #{id,jdbcType=INTEGER}
@@ -158,5 +164,19 @@
       IS_DEFAULT = #{isDefault,jdbcType=INTEGER},
       ACCOUNT = #{account,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="setAddressUndefault" parameterType="java.lang.String">
+    update TBL_ADDRESS
+    set
+      IS_DEFAULT = FALSE
+    where ACCOUNT = #{account,jdbcType=VARCHAR}
+  </update>
+
+  <update id="setAddressDefault" >
+    update TBL_ADDRESS
+    set
+    IS_DEFAULT = #{isDefault,jdbcType=INTEGER}
+    where ID = #{addressId,jdbcType=INTEGER}
   </update>
 </mapper>

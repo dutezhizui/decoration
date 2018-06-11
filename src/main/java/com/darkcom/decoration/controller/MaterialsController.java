@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Api("MaterialsController")
 @RestController
-@RequestMapping(value = "/materials/")
+@RequestMapping(value = "/materials/v1/")
 public class MaterialsController {
     public static final Logger logger = LoggerFactory.getLogger(MaterialsController.class);
     @Autowired

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.darkcom.decoration.common.Result;
 import com.darkcom.decoration.common.ResultCode;
 import com.darkcom.decoration.common.enums.OrderStatusEnum;
+import com.darkcom.decoration.constant.CommonConstants;
 import com.darkcom.decoration.dto.request.CreateOrderRequest;
 import com.darkcom.decoration.exception.BusinessException;
 import com.darkcom.decoration.model.Order;
@@ -46,7 +47,7 @@ public class OrderController {
     @PostMapping(value = "createOrder")
     public Result createOrder(@RequestBody CreateOrderRequest createOrderRequest, HttpServletRequest request) {
         logger.debug("【创建订单】，request={}" + JSON.toJSONString(createOrderRequest));
-        String account = JWTUtil.getUsername(request.getHeader("authorization"));
+        String account = JWTUtil.getUsername(request.getHeader(CommonConstants.AUTHORIZATION));
         User user = userService.selectUserByAccount(account);
         if (null == user) {
             throw new BusinessException(ResultCode.USER_NOT_EXIST.getCode(), ResultCode.USER_NOT_EXIST.getMsg());
@@ -78,12 +79,11 @@ public class OrderController {
     /**
      * 订单列表
      *
-     * @param userId
      * @param status
      * @return
      */
     @GetMapping("orderList")
-    public Result getOrderList(@RequestParam("userId") Long userId,
+    public Result getOrderList(
                         @RequestParam("status") Integer status, HttpServletRequest request) {
         Result result = new Result(200);
         String account = JWTUtil.getUsername(request.getHeader("authorization"));

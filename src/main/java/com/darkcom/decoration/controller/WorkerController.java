@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Api("WorkerController")
 @RestController
-@RequestMapping(value = "/worker/")
+@RequestMapping(value = "/worker/v1/")
 public class WorkerController {
     public static final Logger logger = LoggerFactory.getLogger(WorkerController.class);
     @Autowired

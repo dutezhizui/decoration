@@ -1,10 +1,12 @@
 package com.darkcom.decoration.dto.request;
 
 /**
- * 添加地址
+ * 修改地址
+ *
  * @author yjy
  */
-public class AddAddressRequest {
+public class UpdateAddressRequest {
+    private Integer addressId;
     private String phone;
     private String name;
     private String[] region;
@@ -51,5 +53,13 @@ public class AddAddressRequest {
 
     public void setRegion(String[] region) {
         this.region = region;
+    }
+
+    public Integer getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Integer addressId) {
+        this.addressId = addressId;
     }
 }
