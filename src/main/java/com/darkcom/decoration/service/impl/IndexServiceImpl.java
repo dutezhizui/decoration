@@ -27,11 +27,6 @@ public class IndexServiceImpl implements IindexService {
 
     @Override
     public Map getIndexData() {
-        Map indexMap = new HashMap(2);
-        List<WorkerService> services = workerService.getService("1");
-        List<BuildingMaterials> materials = materialsService.getMaterials("1");
-        indexMap.put("service", services);
-        indexMap.put("materials", materials);
-        return indexMap;
+        return null;
     }
 }

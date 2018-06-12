@@ -10,13 +10,9 @@ import java.util.List;
  * @author yaojy
  */
 public interface IMaterialsService {
-    /**
-     * 获取用户
-     * @param materialsType
-     */
-    List getMaterials(String materialsType);
 
     BuildingMaterials getMaterialsById(Long materialsId);
 
-    void deployMaterials(BuildingMaterials buildingMaterials);
+
+    List<BuildingMaterials> getMaterialsList(Integer materialsType, Integer pageNum, Integer pageSize);
 }

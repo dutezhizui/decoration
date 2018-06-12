@@ -20,5 +20,5 @@ public interface BuildingMaterialsMapper {
 
     int updateByPrimaryKey(BuildingMaterials record);
 
-    List getMaterials(@Param("materialsType") String materialsType);
+    List getMaterialsList(@Param("materialsType") Integer materialsType);
 }

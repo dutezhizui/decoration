@@ -19,5 +19,5 @@ public interface WorkerServiceMapper {
 
     int updateByPrimaryKey(WorkerService record);
 
-    List getServices(String serviceType);
+    List<WorkerService> getServiceList(Integer serviceType);
 }

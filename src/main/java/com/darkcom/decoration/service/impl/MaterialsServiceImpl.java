@@ -3,6 +3,7 @@ package com.darkcom.decoration.service.impl;
 import com.darkcom.decoration.mapper.BuildingMaterialsMapper;
 import com.darkcom.decoration.model.BuildingMaterials;
 import com.darkcom.decoration.service.IMaterialsService;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +21,14 @@ public class MaterialsServiceImpl implements IMaterialsService {
     private BuildingMaterialsMapper materialsMapper;
 
     @Override
-    public List getMaterials(String materialsType) {
-        return materialsMapper.getMaterials(materialsType);
-    }
-
-    @Override
     public BuildingMaterials getMaterialsById(Long materialsId) {
         return materialsMapper.selectByPrimaryKey(materialsId);
     }
 
     @Override
-    public void deployMaterials(BuildingMaterials buildingMaterials) {
-        materialsMapper.insertSelective(buildingMaterials);
+    public List<BuildingMaterials> getMaterialsList(Integer materialsType, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<BuildingMaterials> list=materialsMapper.getMaterialsList(materialsType);
+        return null;
     }
 }
