@@ -86,8 +86,8 @@ public class OrderController {
     public Result getOrderList(
                         @RequestParam("status") Integer status, HttpServletRequest request) {
         Result result = new Result(200);
-        String account = JWTUtil.getUsername(request.getHeader("authorization"));
-        List orderList = orderService.getOrderList(account, status);
+        String account = JWTUtil.getUsername(request.getHeader(CommonConstants.AUTHORIZATION));
+        List<Order> orderList = orderService.getOrderList(account, status);
         result.setData(orderList);
         return Result.succeed(orderList);
     }
