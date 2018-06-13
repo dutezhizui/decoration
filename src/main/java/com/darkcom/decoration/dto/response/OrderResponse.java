@@ -1,6 +1,7 @@
 package com.darkcom.decoration.dto.response;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单详情
@@ -33,7 +34,7 @@ public class OrderResponse {
     private Integer orderType;
 
     private Integer quantity;
-
+    private List<String> images;
     public Long getOrderId() {
         return orderId;
     }
@@ -144,5 +145,13 @@ public class OrderResponse {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }
